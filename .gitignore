@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+.envrc
+
+# Logs
+*.log
+*.out
+*.err
+
+# macOS
+.DS_Store
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Local configs
+config.local.json

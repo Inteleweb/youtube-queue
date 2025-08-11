@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download Queue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .queue-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        #url-input {
+            width: 70%;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Download Queue</h1>
+    <div>
+        <input type="text" id="url-input" placeholder="Enter URL">
+        <button onclick="addToQueue()">Add to Queue</button>
+    </div>
+    <h2>Current Queue</h2>
+    <div id="queue-list">
+    </div>
+
+    <script>
+        function addToQueue() {
+            const url = document.getElementById('url-input').value;
+            if (!url) return;
+
+            fetch('/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `url=${encodeURIComponent(url)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('url-input').value = '';
+                    updateQueue();
+                }
+            });
+        }
+
+        function updateQueue() {
+            fetch('/status')
+            .then(response => response.json())
+            .then(data => {
+                const queueList = document.getElementById('queue-list');
+                queueList.innerHTML = '';
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'queue-item';
+                    div.textContent = item.url;
+                    queueList.appendChild(div);
+                });
+            });
+        }
+
+        setInterval(updateQueue, 5000);
+        updateQueue();
+    </script>
+</body>
+</html>

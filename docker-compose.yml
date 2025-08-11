@@ -1,0 +1,21 @@
+version: "3.8"
+
+name: youtube-queue
+
+services:
+  youtube-queue:
+    build: .
+    container_name: youtube-queue
+    ports:
+      - 5000:5000
+    volumes:
+      - ./app:/app
+      - ./downloads:/downloads
+      - ./queue:/queue
+    restart: unless-stopped
+    networks:
+      - youtube-queue-net
+
+networks:
+  youtube-queue-net:
+    driver: bridge
