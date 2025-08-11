@@ -1,8 +1,10 @@
 FROM python:3.9-slim
 
+COPY requirements.txt .
+
 RUN apt-get update && \
     apt-get install -y ffmpeg && \
-    pip install yt-dlp flask redis
+    pip install -r requirements.txt
 
 WORKDIR /app
 COPY app .
