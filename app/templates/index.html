@@ -101,6 +101,9 @@
                                 <span class="mdc-linear-progress__bar-inner"></span>
                             </div>
                         </div>
+                        <button class="mdc-button mdc-button--outlined remove-button" data-url="{{ item.url }}">
+                            <span class="mdc-button__label">Remove</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -198,6 +201,37 @@
             if (item) {
                 const statusText = item.querySelector('.status-text');
                 statusText.textContent = `Error: ${data.error}`;
+            }
+        });
+
+        function removeQueueItem(url) {
+            fetch('/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `url=${encodeURIComponent(url)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const item = document.querySelector(`.queue-item[data-url="${url}"]`);
+                    if (item) {
+                        item.remove();
+                    }
+                } else {
+                    alert("Error removing item: " + data.error);
+                }
+            });
+        }
+
+        // Add event listeners for remove buttons
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-button')) {
+                const url = event.target.dataset.url;
+                if (confirm('Are you sure you want to remove this video from the queue?')) {
+                    removeQueueItem(url);
+                }
             }
         });
 

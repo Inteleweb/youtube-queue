@@ -107,6 +107,18 @@ def add_to_queue():
 def get_status():
     return jsonify(load_queue())
 
+@app.route('/remove', methods=['POST'])
+def remove_from_queue():
+    url = request.form.get('url')
+    if not url:
+        return jsonify({'error': 'No URL provided'}), 400
+    
+    queue_data = load_queue()
+    updated_queue = [item for item in queue_data if item['url'] != url]
+    save_queue(updated_queue)
+    
+    return jsonify({'status': 'success'})
+
 if __name__ == '__main__':
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
     socketio.run(app, host='0.0.0.0', port=5000)

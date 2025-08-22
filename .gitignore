@@ -24,3 +24,6 @@ docker-compose.override.yml
 # Local configs
 config.local.json
 inteleweb_brand_spec.json
+
+downloads/
+queue/queue.json
